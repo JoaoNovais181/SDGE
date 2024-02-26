@@ -25,6 +25,14 @@ def insert(element):
 
     log(requests)
 
+def changeHead():
+    global requests
+    if requests[0][1] == node_id(): # if src has c in id -> its from client
+        reply(requests[0][2], type="lock_ok")
+        req = requests[0]
+        requests[0] = (req[0],req[1],req[2], True)
+        log(f"Changed {requests = }")
+
 @handler
 def init(msg):
     """Default handler for init message."""
@@ -57,10 +65,7 @@ def forward_lock_ack(msg):
     log(f"{processes} {requests} {lock}")
 
     if lock and not requests[0][3]:
-        if requests[0][1] == node_id(): # if src has c in id -> its from client
-            reply(requests[0][2], type="lock_ok")
-            req = requests[0]
-            requests[0] = (req[0],req[1],req[2], True)
+        changeHead()
 
     clock += 1
 
@@ -89,11 +94,7 @@ def unlock(msg):
             requests.pop(0)
 
             if len(requests) > 0:
-                if requests[0][1] == node_id():
-                    reply(requests[0][2], type="lock_ok")
-                    req = requests[0]
-                    requests[0] = (req[0],req[1],req[2], True)
-                    log(f"Changed top value {requests}")
+                changeHead()
 
 
         for node in node_ids():
@@ -111,28 +112,10 @@ def forward_unlock(msg):
 
     log(f"\tacquired: {requests[0]}\n\trequests: {requests[0::]}\n\tmsg: {msg}")
 
-    # if acquired and acquired[1] == msg.src and acquired[0] == msg.body.remove_clock:
-        
     if requests:
         requests.pop(0)
 
         if len(requests) > 0:
-            if requests[0][1] == node_id():
-                reply(requests[0][2], type="lock_ok")
-                req = requests[0]
-                requests[0] = (req[0],req[1],req[2], True)
-                log(f"Changed top value {requests}")
+            changeHead()
 
 receive()
-
-# while msg := receive():
-#     match msg.body.type:
-#         case "lock":
-#             # if not acquired:
-#             #     reply(msg, type="lock_ok")
-#             #     acquired = msg
-#             #     clock += 1
-#             # else:
-#                 # requests.append((msg, clock))
-#                 # clock += 1
-#         case "unlock":
