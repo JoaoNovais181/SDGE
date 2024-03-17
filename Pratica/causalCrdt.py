@@ -9,7 +9,7 @@ c: dict = {} # auxiliary state
 m: dict = {} # values
 
 # operation counter
-opCounter: int = 100
+opCounter: int = 0
 
 delivered = []
 waiting = []
