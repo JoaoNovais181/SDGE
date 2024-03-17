@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-"""Obviously wrong implementation for 'cbcast' workload for Maelstrom"""
-
 from node import *
 import node
 import json
