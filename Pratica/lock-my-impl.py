@@ -27,7 +27,7 @@ def insert(element):
 
 def changeHead():
     global requests
-    if requests[0][1] == node_id(): # if src has c in id -> its from client
+    if requests[0][1] == node_id():
         reply(requests[0][2], type="lock_ok")
         req = requests[0]
         requests[0] = (req[0],req[1],req[2], True)
