@@ -84,8 +84,6 @@ def fwd_msg(msg):
     cReunionCMsg = { k1: (c1 if c1 > c2 else c2) for (k1,c1), (_, c2) in zip(c.items(), cMsg.items()) }
 
     ## Fazer o join do DotMap, em que para descobrir v(k) utilizo o Join do DotSet
-
-    
     ## Join DotMap
     for k in (list(m.keys()) + list(mMsg.keys())): 
 

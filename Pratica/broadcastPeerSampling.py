@@ -95,6 +95,8 @@ def shuffle(msg):
     P = msg.src
     
     old = [n for n in neighbours if n is not None]
+
+    send(P, type="shuffle_answer", subset=old)
     
     idx = 0
     noneCount = neighbours.count(None)
@@ -110,6 +112,49 @@ def shuffle(msg):
     if num < 0:
         num = 0
     for _ in range(num):
+        neighbours[neighbours.find(old[idxOld])] = subset[idx]
+        idxOld += 1
+        idx += 1
+
+        if idxOld > len(old):
+            break
+
+
+@handler
+def shuffle_answer(msg : sn) -> None:
+    global neighbours
+
+    subset : list[sn] = msg.body.subset
+    
+    if node_id() in subset:
+        subset.remove(node_id())
+
+    for elem in subset:
+        if elem in neighbours:
+            neighbours.remove(elem)
+
+    old = neighbours
+
+    idx = 0
+    noneCount = neighbours.count(None)
+    for _ in range(noneCount):
+        neighbours[neighbours.index(None)] = subset[idx]
+        idx += 1
+
+        if idx > len(subset):
+            break
+
+    idxOld = 0
+    num = len(subset) - idx
+    if num < 0:
+        num = 0
+    for _ in range(num):
+        neighbours[neighbours.find(old[idxOld])] = subset[idx]
+        idxOld += 1
+        idx += 1
+
+        if idxOld > len(old):
+            break
 
 
 
